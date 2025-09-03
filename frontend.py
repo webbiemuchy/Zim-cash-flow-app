@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# CSS for better styling
 st.markdown("""
 <style>
     .main-header {
@@ -386,8 +386,8 @@ if 'net_flows' in st.session_state:
             hovermode="x unified",
             yaxis=dict(
                 title='Exchange Rate',
-                # Set range to match backend constraints for better visualization
-                range=[17, 39]  # Slightly wider than the clipping ranges to show full data
+                
+                range=[17, 35]  # Slightly wider than the clipping ranges to show full data
             )
         )
         
@@ -409,7 +409,7 @@ if 'net_flows' in st.session_state:
         # Top inflow categories
         inflow_cats = category_analysis['inflow_by_category'][('base_amount', 'sum')].sort_values(ascending=False).head(10)
         inflow_cats_df = inflow_cats.reset_index()
-        inflow_cats_df.columns = ['category', 'amount']  # Rename for clarity
+        inflow_cats_df.columns = ['category', 'amount']
 
         fig = px.bar(
             inflow_cats_df,
@@ -450,3 +450,4 @@ if 'net_flows' in st.session_state:
     
     with st.expander("View Detailed Outflows"):
         st.dataframe(outflows.round(2))
+
