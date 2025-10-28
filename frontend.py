@@ -1,21 +1,3 @@
-"""
-Merged frontend: uses the polished dark UI from front1.py while keeping the full
-functionality and displays of front2.py (simulation, CaR, ARIMA forecast, categorical analysis,
-CSV/PNG exports). Drop this file into the same folder as backend.py and logo.svg.
-
-What I did:
-- Adopted front1's dark theme, metric-card UI and helper functions.
-- Kept front2's simulation parameters, model run pipeline, CaR logic and visualizations.
-- Preserved ARIMA forecasting display, cumulative & worst-case charts, categorical analysis,
-  and raw data / export functionality.
-- Avoided nested expanders (Streamlit API restriction).
-- Added robust helpers for date conversion, CSV/PNG exports, and plot styling.
-- ENHANCEMENTS: Applied modern styling to the header, buttons, and metric cards for a cohesive look.
-- FIX: Implemented a more aggressive CSS fix for the fixed (sticky) header using high z-index and !important.
-- FIX: Changed Run/Reset button text color to pure black (#000000) for definite high contrast.
-
-Run: streamlit run front2.py
-"""
 from pathlib import Path
 import base64
 import io
@@ -27,24 +9,24 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
-# Assuming backend.py (ZimbabweCashFlowModel) is available in the environment
 from backend import ZimbabweCashFlowModel
 
 # ----------------------------
 # Page config
 # ----------------------------
 st.set_page_config(
-    page_title="Zimbabwe Cash Flow Dashboard — Enhanced",
+    page_title="QuantumFlow: AI-Powered Treasury Intelligence Platform",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ----------------------------
-# Dark UI CSS (from front1.py) - ENHANCED & FIXED HEADER FIX
+# Premium Dark UI CSS with Enhanced Header
 # ----------------------------
-ENHANCED_CSS = """
+PREMIUM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
 /* Load Font Awesome for Icons */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
 
@@ -58,6 +40,8 @@ ENHANCED_CSS = """
     --success-color: #10b981; /* Emerald 500 */
     --danger-color: #ef4444; /* Red 500 */
     --warning-color: #f59e0b; /* Amber 500 */
+    --premium-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --quantum-gradient: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
 }
 
 /* Base Body Styling - IMPORTANT for Streamlit to adopt the dark background */
@@ -73,51 +57,113 @@ ENHANCED_CSS = """
     color: var(--text-light);
 }
 
-/* --- 1. STICKY HEADER IMPLEMENTATION (Aggressive Fix) --- */
-.elevated-header-container {
+/* --- PREMIUM HEADER IMPLEMENTATION --- */
+.premium-header-container {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 1rem 1rem;
+    gap: 20px;
+    padding: 1.2rem 2rem;
     margin-bottom: 0;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
     
-    /* AGGRESSIVE STICKY PROPERTIES */
-    position: fixed !important; /* Force fixed positioning */
+    /* Premium Sticky Properties */
+    position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    /* Adjust right to account for potential scrollbar area */
-    right: 0 !important; 
-    z-index: 99999 !important; /* Extremely high z-index */
-    background-color: var(--bg-dark); /* Solid background to cover scrolling content */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.7); /* Subtle shadow for elevation */
-    width: 100%; /* Ensure it spans the full width of the main content area */
+    right: 0 !important;
+    z-index: 99999 !important;
+    
+    /* Premium Gradient Background */
+    background: var(--quantum-gradient);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Push down main content to clear the fixed header. 
-   Targeting the main block-container ensures content starts below the fixed header. */
+/* Logo Container with Premium Styling */
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Header Content */
+.header-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.system-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 2.8rem !important;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 4px !important;
+    line-height: 1.1;
+}
+
+.system-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem !important;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+/* Status Badge */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.live-indicator {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Push down main content to clear the fixed header */
 .block-container {
-    padding-top: 6rem !important; /* Increased padding to clear the fixed header height */
+    padding-top: 7rem !important;
     padding-bottom: 2rem;
 }
 
 /* Adjust Streamlit's wrapper element if necessary */
-/* This targets the main content block that contains the header content */
 div[data-testid="stVerticalBlock"]:first-child {
-    /* Ensure the first element containing the header content doesn't disrupt the fix */
-    margin-top: 0 !important; 
+    margin-top: 0 !important;
 }
 /* ----------------------------------------------------- */
-
-
-.elevated-header-container .dashboard-header {
-    font-size: 2.5rem; /* Slightly larger */
-    font-weight: 800;
-    color: var(--primary-color);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
 
 /* Custom Metric Cards */
 .metric-card {
@@ -248,8 +294,7 @@ div.stDownloadButton > button:hover {
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35) !important;
 }
 
-/* --- 2. ENHANCED BUTTON STYLING (Sidebar Form) --- */
-/* Target buttons in the sidebar form and force black text */
+/* --- ENHANCED BUTTON STYLING (Sidebar Form) --- */
 [data-testid="stForm"] div.stButton button {
     width: 100%;
     margin-top: 10px;
@@ -260,7 +305,7 @@ div.stDownloadButton > button:hover {
 
 </style>
 """
-st.markdown(ENHANCED_CSS, unsafe_allow_html=True)
+st.markdown(PREMIUM_CSS, unsafe_allow_html=True)
 
 # ----------------------------
 # Helper functions (merged)
@@ -374,14 +419,31 @@ def generate_summary_stats(net_flows, forecast_df):
     return stats
 
 # ----------------------------
-# Header (adopt front1 style) - ENHANCED & STICKY FIX
+# PREMIUM HEADER with Enhanced Branding
 # ----------------------------
-# This header container is now set to position: fixed in the CSS
-# Note: Streamlit renders elements into blocks. We need to ensure this block is always
-# at the top and covers the full width of the main content area.
-st.markdown("<div class='elevated-header-container'>", unsafe_allow_html=True)
-display_logo("logo.svg", width=64, alt="MWC") # Slightly larger logo
-st.markdown("<div style='display:flex; flex-direction:column'><div class='dashboard-header'>MWC Financial Intelligence Dashboard</div><div style='color:#94a3b8; font-size: 1rem; font-weight: 500;'>Advanced Multi-currency Simulation · AI/ML Forecasting · Cash-at-Risk</div></div>", unsafe_allow_html=True)
+st.markdown("<div class='premium-header-container'>", unsafe_allow_html=True)
+
+# Logo in premium container
+st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
+display_logo("logo.svg", width=48, alt="QF")
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Header content with new system name and tagline
+st.markdown("""
+<div class='header-content'>
+    <div class='system-name'>QuantumFlow</div>
+    <div class='system-tagline'>AI-Powered Treasury Intelligence Platform • Multi-Currency Risk Analytics</div>
+</div>
+""", unsafe_allow_html=True)
+
+# Status badge
+st.markdown("""
+<div class='status-badge'>
+    <div class='live-indicator'></div>
+    <span>LIVE ANALYSIS</span>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 # ----------------------------
@@ -454,7 +516,7 @@ st.session_state['params'] = {
 }
 
 if presentation_mode:
-    st.markdown("<style>.dashboard-header{font-size:2.6rem !important}</style>", unsafe_allow_html=True)
+    st.markdown("<style>.system-name{font-size:3rem !important}</style>", unsafe_allow_html=True)
 
 if run:
     st.session_state['run_model'] = True
@@ -520,7 +582,7 @@ if st.session_state.get('run_model', False):
 if 'net_flows' not in st.session_state or st.session_state['net_flows'].empty or not st.session_state.get('run_model', False):
     st.markdown("""
     <div class='chart-section'>
-      <h3 style='margin:0 0 8px 0'>Welcome to the MWC Financial Dashboard</h3>
+      <h3 style='margin:0 0 8px 0'>Welcome to QuantumFlow Treasury Intelligence</h3>
       <p style='color:#94a3b8'>Configure simulation parameters in the sidebar and click <strong>Run Analysis</strong> to generate cash flow simulations, Cash-at-Risk (CaR) analysis, and AI/ARIMA forecasts.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -784,4 +846,4 @@ with tab4:
 
 # Footer
 st.markdown("---")
-st.markdown("<div class='dashboard-footer'>MWC Cashflow Analysis • AI/ML Enhanced • Tip: install kaleido for PNG exports</div>", unsafe_allow_html=True)
+st.markdown("<div class='dashboard-footer'>QuantumFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
