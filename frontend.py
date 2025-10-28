@@ -15,15 +15,15 @@ from backend import ZimbabweCashFlowModel
 # Page config
 # ----------------------------
 st.set_page_config(
-    page_title="QuantumFlow: AI-Powered Treasury Intelligence Platform",
+    page_title=" MWC CashflowFlow: AI-Powered Treasury Intelligence Platform",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ----------------------------
-# Premium Dark UI CSS with Enhanced Header
+#   Dark UI CSS
 # ----------------------------
-PREMIUM_CSS = """
+ _CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
@@ -40,7 +40,7 @@ PREMIUM_CSS = """
     --success-color: #10b981; /* Emerald 500 */
     --danger-color: #ef4444; /* Red 500 */
     --warning-color: #f59e0b; /* Amber 500 */
-    --premium-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -- -gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --quantum-gradient: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
 }
 
@@ -57,22 +57,22 @@ PREMIUM_CSS = """
     color: var(--text-light);
 }
 
-/* --- PREMIUM HEADER IMPLEMENTATION --- */
-.premium-header-container {
+/* ---   HEADER IMPLEMENTATION --- */
+. -header-container {
     display: flex;
     align-items: center;
     gap: 20px;
     padding: 1.2rem 2rem;
     margin-bottom: 0;
     
-    /* Premium Sticky Properties */
+    /*   Sticky Properties */
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     z-index: 99999 !important;
     
-    /* Premium Gradient Background */
+    /*   Gradient Background */
     background: var(--quantum-gradient);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     width: 100%;
@@ -80,7 +80,7 @@ PREMIUM_CSS = """
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Logo Container with Premium Styling */
+/* Logo Container with   Styling */
 .logo-container {
     display: flex;
     align-items: center;
@@ -260,7 +260,7 @@ p, .stMarkdown, label {
     margin-top: 1.5rem;
 }
 
-/* --- ENHANCED BUTTON STYLING (General) --- */
+/* ---   BUTTON STYLING (General) --- */
 div.stButton > button {
     background-color: var(--primary-color) !important;
     color: var(--text-light) !important;
@@ -294,7 +294,7 @@ div.stDownloadButton > button:hover {
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35) !important;
 }
 
-/* --- ENHANCED BUTTON STYLING (Sidebar Form) --- */
+/* ---   BUTTON STYLING (Sidebar Form) --- */
 [data-testid="stForm"] div.stButton button {
     width: 100%;
     margin-top: 10px;
@@ -305,7 +305,7 @@ div.stDownloadButton > button:hover {
 
 </style>
 """
-st.markdown(PREMIUM_CSS, unsafe_allow_html=True)
+st.markdown( _CSS, unsafe_allow_html=True)
 
 # ----------------------------
 # Helper functions (merged)
@@ -419,11 +419,11 @@ def generate_summary_stats(net_flows, forecast_df):
     return stats
 
 # ----------------------------
-# PREMIUM HEADER with Enhanced Branding
+#   HEADER with   Branding
 # ----------------------------
-st.markdown("<div class='premium-header-container'>", unsafe_allow_html=True)
+st.markdown("<div class=' -header-container'>", unsafe_allow_html=True)
 
-# Logo in premium container
+# Logo in   container
 st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
 display_logo("logo.svg", width=48, alt="QF")
 st.markdown("</div>", unsafe_allow_html=True)
@@ -431,7 +431,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # Header content with new system name and tagline
 st.markdown("""
 <div class='header-content'>
-    <div class='system-name'>QuantumFlow</div>
+    <div class='system-name'> MWC CashflowFlow</div>
     <div class='system-tagline'>AI-Powered Treasury Intelligence Platform • Multi-Currency Risk Analytics</div>
 </div>
 """, unsafe_allow_html=True)
@@ -582,7 +582,7 @@ if st.session_state.get('run_model', False):
 if 'net_flows' not in st.session_state or st.session_state['net_flows'].empty or not st.session_state.get('run_model', False):
     st.markdown("""
     <div class='chart-section'>
-      <h3 style='margin:0 0 8px 0'>Welcome to QuantumFlow Treasury Intelligence</h3>
+      <h3 style='margin:0 0 8px 0'>Welcome to  MWC CashflowFlow Treasury Intelligence</h3>
       <p style='color:#94a3b8'>Configure simulation parameters in the sidebar and click <strong>Run Analysis</strong> to generate cash flow simulations, Cash-at-Risk (CaR) analysis, and AI/ARIMA forecasts.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -596,10 +596,10 @@ inflows = st.session_state.get('inflows', pd.DataFrame())
 outflows = st.session_state.get('outflows', pd.DataFrame())
 params = st.session_state['params']
 
-# ----------------------------
-# Top metric cards (front1 UI) but use front2 values - ENHANCED HTML
+
 # ----------------------------
 # This content is correctly pushed down by the .block-container padding-top change
+# ----------------------------
 metric_cols = st.columns(4)
 
 with metric_cols[0]:
@@ -846,4 +846,5 @@ with tab4:
 
 # Footer
 st.markdown("---")
-st.markdown("<div class='dashboard-footer'>QuantumFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
+st.markdown("<div class='dashboard-footer'> MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
+
