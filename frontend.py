@@ -94,6 +94,11 @@ ENHANCED_CSS = """
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     flex-shrink: 0;
 }
+/* Flag Emoji Styling */
+.logo-container .flag-emoji {
+    font-size: 3rem; /* Make the emoji large inside the container */
+    line-height: 1;
+}
 
 /* Header Content - Updated for horizontal layout */
 .header-content {
@@ -328,40 +333,8 @@ div.stDownloadButton > button:hover {
 st.markdown(ENHANCED_CSS, unsafe_allow_html=True)
 
 # ----------------------------
-# Helper functions (merged)
+# Helper functions (modified - logo-related helpers removed)
 # ----------------------------
-def display_logo(filename="logo.svgn", width=56, alt="Logo"):
-    """Robust logo helper (embed svg or fallback to image/text)."""
-    try:
-        base_path = Path(__file__).parent
-    except NameError:
-        base_path = Path.cwd()
-    logo_path = (base_path / filename)
-    if not logo_path.exists():
-        for f in base_path.iterdir():
-            if f.name.lower() == filename.lower():
-                logo_path = f
-                break
-    if not logo_path.exists():
-        st.markdown(f"<div style='font-weight:700; font-size:18px'>{alt}</div>", unsafe_allow_html=True)
-        return
-
-    if logo_path.suffix.lower() == ".svg":
-        try:
-            svg_text = logo_path.read_text(encoding="utf-8")
-            b64 = base64.b64encode(svg_text.encode("utf-8")).decode("utf-8")
-            img_tag = f'<img src="data:image/svg+xml;base64,{b64}" width="{width}" alt="{alt}"/>'
-            st.markdown(img_tag, unsafe_allow_html=True)
-            return
-        except Exception:
-            pass
-
-    try:
-        st.image(str(logo_path), width=width)
-    except Exception:
-        st.markdown(f"<div style='font-weight:700; font-size:18px'>{alt}</div>", unsafe_allow_html=True)
-
-
 def style_plotly_figure(fig, title_text=None, height=450):
     """Apply dark theme to Plotly figure consistent with UI."""
     if title_text:
@@ -395,16 +368,7 @@ def df_to_csv_bytes(df: pd.DataFrame):
     df.to_csv(buf, index=False)
     return buf.getvalue().encode('utf-8')
 
-def fig_to_png_bytes(fig):
-    try:
-        img_bytes = fig.to_image(format="png", engine="kaleido")
-        return img_bytes
-    except Exception:
-        try:
-            img_bytes = fig.to_image(format="png")
-            return img_bytes
-        except Exception:
-            return None
+# The `fig_to_png_bytes` function is not used in the provided code, so it's removed to clean up.
 
 def calculate_trend(current, previous):
     if previous == 0:
@@ -439,15 +403,18 @@ def generate_summary_stats(net_flows, forecast_df):
     return stats
 
 # ----------------------------
-# ENHANCED HEADER with Horizontal Layout
+# ENHANCED HEADER with Horizontal Layout (MODIFIED FOR FLAG)
 # ----------------------------
 # Create columns for horizontal layout: logo | text | badge
 header_col1, header_col2, header_col3 = st.columns([0.5, 8, 1.5])
 
 with header_col1:
-    st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-    display_logo("logo.svg", width=48, alt="MWC")
-    st.markdown("</div>", unsafe_allow_html=True)
+    # REPLACED display_logo CALL WITH ZIMBABWEAN FLAG EMOJI
+    st.markdown("""
+    <div class='logo-container'>
+        <span class='flag-emoji'>🇿🇼</span>
+    </div>
+    """, unsafe_allow_html=True)
 
 with header_col2:
     st.markdown("""
@@ -869,5 +836,3 @@ with tab4:
 # Footer
 st.markdown("---")
 st.markdown("<div class='dashboard-footer'>MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
-
-
