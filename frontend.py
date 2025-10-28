@@ -425,7 +425,7 @@ st.markdown("<div class=' -header-container'>", unsafe_allow_html=True)
 
 # Logo in   container
 st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-display_logo("logo.svg", width=48, alt="QF")
+display_logo("logo.svg", width=48, alt="MWC")
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Header content with new system name and tagline
@@ -847,4 +847,5 @@ with tab4:
 # Footer
 st.markdown("---")
 st.markdown("<div class='dashboard-footer'> MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
+
 
