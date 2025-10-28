@@ -441,33 +441,32 @@ def generate_summary_stats(net_flows, forecast_df):
 # ----------------------------
 # ENHANCED HEADER with Horizontal Layout
 # ----------------------------
-st.markdown("<div class='enhanced-header-container'>", unsafe_allow_html=True)
+# Create columns for horizontal layout: logo | text | badge
+header_col1, header_col2, header_col3 = st.columns([0.5, 8, 1.5])
 
-# Header content with horizontal layout
-st.markdown("""
-<div class='header-content'>
-    <div class='title-section'>
-        <div class='logo-container'>
-""", unsafe_allow_html=True)
+with header_col1:
+    st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
+    display_logo("logo.svg", width=48, alt="MWC")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# Logo in enhanced container
-display_logo("logo.svg", width=48, alt="MWC")
-
-st.markdown("""
-        </div>
+with header_col2:
+    st.markdown("""
         <div class='text-content'>
             <div class='system-name'>MWC CashflowFlow</div>
             <div class='system-tagline'>AI-Powered Treasury Intelligence Platform • Multi-Currency Risk Analytics</div>
         </div>
-    </div>
-    <div class='status-badge'>
-        <div class='live-indicator'></div>
-        <span>LIVE ANALYSIS</span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+with header_col3:
+    st.markdown("""
+        <div class='status-badge'>
+            <div class='live-indicator'></div>
+            <span>LIVE ANALYSIS</span>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Add spacing after header
+st.markdown("<div style='margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
 
 # ----------------------------
 # Sidebar: controls from front2 but styled here
@@ -870,3 +869,4 @@ with tab4:
 # Footer
 st.markdown("---")
 st.markdown("<div class='dashboard-footer'>MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
+
