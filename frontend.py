@@ -13,15 +13,15 @@ from backend import ZimbabweCashFlowModel
 # Page config
 # ----------------------------
 st.set_page_config(
-    page_title="Zimbabwe Cash Flow Dashboard — Enhanced",
+    page_title="Zimbabwe Cash Flow Dashboard",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ----------------------------
-# Enhanced Styles
+# Styles
 # ----------------------------
-ENHANCED_CSS = """
+CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -92,7 +92,7 @@ body {
     margin: 0.5rem 0 0 0;
 }
 
-/* Enhanced KPI Cards */
+/*   KPI Cards */
 .kpi-card {
     background: var(--card-bg);
     border-radius: 16px;
@@ -319,7 +319,7 @@ PRESENTATION_MODE_CSS = """
 </style>
 """
 
-st.markdown(ENHANCED_CSS, unsafe_allow_html=True)
+st.markdown(CSS, unsafe_allow_html=True)
 
 # ----------------------------
 # Utilities
@@ -390,7 +390,7 @@ def generate_summary_stats(net_flows, forecast_df):
     return stats
 
 # ----------------------------
-# Enhanced Header
+#   Header
 # ----------------------------
 st.markdown("""
 <div class='dashboard-header'>
@@ -405,7 +405,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# Enhanced Sidebar
+#   Sidebar
 # ----------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Simulation Configuration")
@@ -625,7 +625,7 @@ outflows = st.session_state.get('outflows', pd.DataFrame())
 params = st.session_state['params']
 
 # ----------------------------
-# Enhanced KPI Cards
+#   KPI Cards
 # ----------------------------
 st.markdown("<div class='animate-fade-in'>", unsafe_allow_html=True)
 
@@ -742,7 +742,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # ----------------------------
 tab1, tab2, tab3, tab4 = st.tabs(["📈 Cash Flow Analysis", "🧠 AI Forecasting", "📊 Category Breakdown", "📋 Detailed Data"])
 
-# TAB 1: Enhanced Cash Flow
+# TAB 1:   Cash Flow
 with tab1:
     st.markdown("<div class='section-header'>Cumulative Balance & Risk Timeline</div>", unsafe_allow_html=True)
     
@@ -883,7 +883,7 @@ with tab1:
         height=400
     )
 
-# TAB 2: Enhanced Forecasting
+# TAB 2:   Forecasting
 with tab2:
     st.markdown("<div class='section-header'>AI-Powered ARIMA Forecast</div>", unsafe_allow_html=True)
     
@@ -1053,7 +1053,7 @@ with tab2:
                 height=400
             )
 
-# TAB 3: Enhanced Category Analysis
+# TAB 3:   Category Analysis
 with tab3:
     st.markdown("<div class='section-header'>Multi-Currency Flow Analysis</div>", unsafe_allow_html=True)
     
@@ -1287,7 +1287,7 @@ st.markdown("---")
 st.markdown("""
 <div class='dashboard-footer'>
     <strong>Zimbabwe Cash Flow Intelligence Platform v2.0</strong><br>
-    Enhanced with AI/ML capabilities, multi-currency analysis, and advanced risk assessment<br>
-    <em>💡 Tip: Install 'kaleido' package for PNG exports (pip install -U kaleido)</em>
-</div>
+      with AI/ML capabilities, multi-currency analysis, and advanced risk assessment<br>
+   </div>
 """, unsafe_allow_html=True)
+
