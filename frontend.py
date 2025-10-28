@@ -330,7 +330,7 @@ st.markdown(ENHANCED_CSS, unsafe_allow_html=True)
 # ----------------------------
 # Helper functions (merged)
 # ----------------------------
-def display_logo(filename="logo.svg", width=56, alt="Logo"):
+def display_logo(filename="logo.svgn", width=56, alt="Logo"):
     """Robust logo helper (embed svg or fallback to image/text)."""
     try:
         base_path = Path(__file__).parent
@@ -869,4 +869,5 @@ with tab4:
 # Footer
 st.markdown("---")
 st.markdown("<div class='dashboard-footer'>MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
+
 
