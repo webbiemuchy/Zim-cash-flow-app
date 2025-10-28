@@ -15,15 +15,15 @@ from backend import ZimbabweCashFlowModel
 # Page config
 # ----------------------------
 st.set_page_config(
-    page_title=" MWC CashflowFlow: AI-Powered Treasury Intelligence Platform",
+    page_title="MWC CashflowFlow: AI-Powered Treasury Intelligence Platform",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ----------------------------
-#   Dark UI CSS
+# Enhanced Dark UI CSS
 # ----------------------------
-_CSS = """
+ENHANCED_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
@@ -40,7 +40,7 @@ _CSS = """
     --success-color: #10b981; /* Emerald 500 */
     --danger-color: #ef4444; /* Red 500 */
     --warning-color: #f59e0b; /* Amber 500 */
-    -- -gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --premium-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --quantum-gradient: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
 }
 
@@ -57,22 +57,22 @@ _CSS = """
     color: var(--text-light);
 }
 
-/* ---   HEADER IMPLEMENTATION --- */
-. -header-container {
+/* --- ENHANCED HEADER IMPLEMENTATION --- */
+.enhanced-header-container {
     display: flex;
     align-items: center;
     gap: 20px;
     padding: 1.2rem 2rem;
     margin-bottom: 0;
     
-    /*   Sticky Properties */
+    /* Sticky Properties */
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     z-index: 99999 !important;
     
-    /*   Gradient Background */
+    /* Premium Gradient Background */
     background: var(--quantum-gradient);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     width: 100%;
@@ -80,7 +80,7 @@ _CSS = """
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Logo Container with   Styling */
+/* Logo Container with Enhanced Styling */
 .logo-container {
     display: flex;
     align-items: center;
@@ -92,13 +92,31 @@ _CSS = """
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
 }
 
-/* Header Content */
+/* Header Content - Updated for horizontal layout */
 .header-content {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     flex: 1;
+    gap: 20px;
+}
+
+/* Title section with logo and text */
+.title-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Text content */
+.text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .system-name {
@@ -110,7 +128,7 @@ _CSS = """
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    margin-bottom: 4px !important;
+    margin: 0 !important;
     line-height: 1.1;
 }
 
@@ -124,7 +142,7 @@ _CSS = """
     margin: 0;
 }
 
-/* Status Badge */
+/* Status Badge - Now on the same line */
 .status-badge {
     display: flex;
     align-items: center;
@@ -137,6 +155,8 @@ _CSS = """
     font-size: 0.85rem;
     font-weight: 600;
     color: white;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .live-indicator {
@@ -260,7 +280,7 @@ p, .stMarkdown, label {
     margin-top: 1.5rem;
 }
 
-/* ---   BUTTON STYLING (General) --- */
+/* --- ENHANCED BUTTON STYLING (General) --- */
 div.stButton > button {
     background-color: var(--primary-color) !important;
     color: var(--text-light) !important;
@@ -294,7 +314,7 @@ div.stDownloadButton > button:hover {
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35) !important;
 }
 
-/* ---   BUTTON STYLING (Sidebar Form) --- */
+/* --- ENHANCED BUTTON STYLING (Sidebar Form) --- */
 [data-testid="stForm"] div.stButton button {
     width: 100%;
     margin-top: 10px;
@@ -305,7 +325,7 @@ div.stDownloadButton > button:hover {
 
 </style>
 """
-st.markdown( _CSS, unsafe_allow_html=True)
+st.markdown(ENHANCED_CSS, unsafe_allow_html=True)
 
 # ----------------------------
 # Helper functions (merged)
@@ -419,28 +439,31 @@ def generate_summary_stats(net_flows, forecast_df):
     return stats
 
 # ----------------------------
-#   HEADER with   Branding
+# ENHANCED HEADER with Horizontal Layout
 # ----------------------------
-st.markdown("<div class=' -header-container'>", unsafe_allow_html=True)
+st.markdown("<div class='enhanced-header-container'>", unsafe_allow_html=True)
 
-# Logo in   container
-st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-display_logo("logo.svg", width=48, alt="MWC")
-st.markdown("</div>", unsafe_allow_html=True)
-
-# Header content with new system name and tagline
+# Header content with horizontal layout
 st.markdown("""
 <div class='header-content'>
-    <div class='system-name'> MWC CashflowFlow</div>
-    <div class='system-tagline'>AI-Powered Treasury Intelligence Platform • Multi-Currency Risk Analytics</div>
-</div>
+    <div class='title-section'>
+        <div class='logo-container'>
 """, unsafe_allow_html=True)
 
-# Status badge
+# Logo in enhanced container
+display_logo("logo.svg", width=48, alt="MWC")
+
 st.markdown("""
-<div class='status-badge'>
-    <div class='live-indicator'></div>
-    <span>LIVE ANALYSIS</span>
+        </div>
+        <div class='text-content'>
+            <div class='system-name'>MWC CashflowFlow</div>
+            <div class='system-tagline'>AI-Powered Treasury Intelligence Platform • Multi-Currency Risk Analytics</div>
+        </div>
+    </div>
+    <div class='status-badge'>
+        <div class='live-indicator'></div>
+        <span>LIVE ANALYSIS</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -582,7 +605,7 @@ if st.session_state.get('run_model', False):
 if 'net_flows' not in st.session_state or st.session_state['net_flows'].empty or not st.session_state.get('run_model', False):
     st.markdown("""
     <div class='chart-section'>
-      <h3 style='margin:0 0 8px 0'>Welcome to  MWC CashflowFlow Treasury Intelligence</h3>
+      <h3 style='margin:0 0 8px 0'>Welcome to MWC CashflowFlow Treasury Intelligence</h3>
       <p style='color:#94a3b8'>Configure simulation parameters in the sidebar and click <strong>Run Analysis</strong> to generate cash flow simulations, Cash-at-Risk (CaR) analysis, and AI/ARIMA forecasts.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -846,8 +869,4 @@ with tab4:
 
 # Footer
 st.markdown("---")
-st.markdown("<div class='dashboard-footer'> MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
-
-
-
-
+st.markdown("<div class='dashboard-footer'>MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
