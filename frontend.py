@@ -23,7 +23,7 @@ st.set_page_config(
 # ----------------------------
 #   Dark UI CSS
 # ----------------------------
- _CSS = """
+_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
@@ -847,6 +847,7 @@ with tab4:
 # Footer
 st.markdown("---")
 st.markdown("<div class='dashboard-footer'> MWC CashflowFlow Treasury Intelligence • AI-Powered Risk Analytics Platform</div>", unsafe_allow_html=True)
+
 
 
 
