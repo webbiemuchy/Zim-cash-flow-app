@@ -93,11 +93,13 @@ ENHANCED_CSS = """
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     flex-shrink: 0;
+    padding: 10px;
 }
-/* Flag Emoji Styling */
-.logo-container .flag-emoji {
-    font-size: 3rem; /* Make the emoji large inside the container */
-    line-height: 1;
+
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Header Content - Updated for horizontal layout */
@@ -323,7 +325,6 @@ div.stDownloadButton > button:hover {
 [data-testid="stForm"] div.stButton button {
     width: 100%;
     margin-top: 10px;
-    /* CHANGE TEXT COLOR TO PURE BLACK FOR DEFINITE HIGH CONTRAST */
     color: #000000 !important; 
 }
 /* ------------------------------------------------ */
@@ -333,8 +334,22 @@ div.stDownloadButton > button:hover {
 st.markdown(ENHANCED_CSS, unsafe_allow_html=True)
 
 # ----------------------------
-# Helper functions (modified - logo-related helpers removed)
+# Helper functions
 # ----------------------------
+def get_logo_base64():
+    """Load and encode logo.svg from parent directory"""
+    try:
+        logo_path = Path(__file__).parent.parent / "logo.svg"
+        if logo_path.exists():
+            with open(logo_path, "rb") as f:
+                return base64.b64encode(f.read()).decode()
+        else:
+            st.warning(f"Logo file not found at {logo_path}")
+            return None
+    except Exception as e:
+        st.error(f"Error loading logo: {e}")
+        return None
+
 def style_plotly_figure(fig, title_text=None, height=450):
     """Apply dark theme to Plotly figure consistent with UI."""
     if title_text:
@@ -367,8 +382,6 @@ def df_to_csv_bytes(df: pd.DataFrame):
     buf = io.StringIO()
     df.to_csv(buf, index=False)
     return buf.getvalue().encode('utf-8')
-
-# The `fig_to_png_bytes` function is not used in the provided code, so it's removed to clean up.
 
 def calculate_trend(current, previous):
     if previous == 0:
@@ -403,18 +416,25 @@ def generate_summary_stats(net_flows, forecast_df):
     return stats
 
 # ----------------------------
-# ENHANCED HEADER with Horizontal Layout (MODIFIED FOR FLAG)
+# ENHANCED HEADER with Logo
 # ----------------------------
-# Create columns for horizontal layout: logo | text | badge
-header_col1, header_col2, header_col3 = st.columns([0.5, 8, 1.5])
+header_col1, header_col2, header_col3 = st.columns([1, 8, 1.8])
 
 with header_col1:
-    # REPLACED display_logo CALL WITH ZIMBABWEAN FLAG EMOJI
-    st.markdown("""
-    <div class='logo-container'>
-        <span class='flag-emoji'>🇿🇼</span>
-    </div>
-    """, unsafe_allow_html=True)
+    logo_b64 = get_logo_base64()
+    if logo_b64:
+        st.markdown(f"""
+        <div class='logo-container'>
+            <img src='data:image/svg+xml;base64,{logo_b64}' alt='Logo'/>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # Fallback if logo not found
+        st.markdown("""
+        <div class='logo-container'>
+            <i class='fa-solid fa-chart-line' style='font-size: 2.5rem; color: white;'></i>
+        </div>
+        """, unsafe_allow_html=True)
 
 with header_col2:
     st.markdown("""
@@ -436,7 +456,7 @@ with header_col3:
 st.markdown("<div style='margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
 
 # ----------------------------
-# Sidebar: controls from front2 but styled here
+# Sidebar: controls
 # ----------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Simulation Configuration")
@@ -457,7 +477,6 @@ with st.sidebar:
         with col4:
             zar_volatility = st.slider("ZAR Volatility", 0.002, 0.07, 0.01, 0.001)
 
-        # Advanced controls (not nested inside another expander)
         st.markdown("---")
         st.markdown("#### Advanced")
         seed_option = st.checkbox("Fixed Random Seed", value=False)
@@ -469,10 +488,8 @@ with st.sidebar:
 
         col_run, col_reset = st.columns(2)
         with col_run:
-            # The text color for this button is now darker via CSS
             run = st.form_submit_button("▶️ Run Analysis")
         with col_reset:
-            # The text color for this button is now darker via CSS
             reset = st.form_submit_button("🔄 Reset View")
 
     st.markdown("---")
@@ -488,7 +505,7 @@ if 'reset' in locals() and reset:
     for k in ['run_model','net_flows','forecast_df','category_analysis','inflows','outflows','params']:
         if k in st.session_state:
             del st.session_state[k]
-    st.experimental_rerun()
+    st.rerun()
 
 # Persist params to session
 st.session_state['params'] = {
@@ -511,7 +528,7 @@ if run:
     st.session_state['run_model'] = True
 
 # ----------------------------
-# Run model when requested (front2 functionality)
+# Run model when requested
 # ----------------------------
 if st.session_state.get('run_model', False):
     params = st.session_state['params']
@@ -552,7 +569,6 @@ if st.session_state.get('run_model', False):
         category_analysis = model.categorized_analysis(inflows, outflows)
         pbar.progress(100)
 
-        # normalize date columns
         net_flows_with_car['date'] = pd.to_datetime(net_flows_with_car['date'])
         if not forecast_df.empty:
             forecast_df['date'] = pd.to_datetime(forecast_df['date'])
@@ -562,7 +578,7 @@ if st.session_state.get('run_model', False):
         st.session_state['category_analysis'] = category_analysis
         st.session_state['inflows'] = inflows
         st.session_state['outflows'] = outflows
-        st.session_state['run_model'] = True # Ensure model ran successfully
+        st.session_state['run_model'] = True
         st.success("Analysis complete!")
 
 # ----------------------------
@@ -585,9 +601,8 @@ inflows = st.session_state.get('inflows', pd.DataFrame())
 outflows = st.session_state.get('outflows', pd.DataFrame())
 params = st.session_state['params']
 
-
 # ----------------------------
-# This content is correctly pushed down by the .block-container padding-top change
+# Metrics Cards
 # ----------------------------
 metric_cols = st.columns(4)
 
@@ -604,7 +619,6 @@ with metric_cols[0]:
 
 with metric_cols[1]:
     current_balance = float(net_flows['cumulative'].iloc[-1])
-    # Apply success color if balance is > initial balance, else neutral
     balance_status_class = "status-positive" if current_balance >= params['initial_balance'] else "status-neutral"
     render_html = f"""
     <div class='metric-card'>
@@ -617,7 +631,6 @@ with metric_cols[1]:
 
 with metric_cols[2]:
     avg_daily_net = float(net_flows['net'].mean())
-    # Apply status class based on sign
     net_status_class = "status-positive" if avg_daily_net > 0 else "status-negative" if avg_daily_net < 0 else "status-neutral"
     render_html = f"""
     <div class='metric-card'>
@@ -640,7 +653,7 @@ with metric_cols[3]:
     st.markdown(render_html, unsafe_allow_html=True)
 
 # ----------------------------
-# Main tabs & charts (preserve front2 displays)
+# Main tabs & charts
 # ----------------------------
 tab1, tab2, tab3, tab4 = st.tabs(["📈 Cash Flow Analysis", "🧠 AI Forecasting", "📊 Category Breakdown", "📋 Data & Exports"])
 
@@ -671,7 +684,6 @@ with tab1:
 
     st.plotly_chart(fig, use_container_width=True)
 
-    # Daily net flow
     st.markdown("<h4 style='margin-top:16px'>Daily Net Flow</h4>", unsafe_allow_html=True)
     fig_net = go.Figure()
     colors = ['#10b981' if x >= 0 else '#ef4444' for x in net_flows['net']]
@@ -680,7 +692,6 @@ with tab1:
     fig_net = style_plotly_figure(fig_net, title_text='Daily Net Cash Flow', height=320)
     st.plotly_chart(fig_net, use_container_width=True)
 
-    # Recent CaR table
     st.markdown("<h4 style='margin-top:16px'>Recent Cash-at-Risk Analysis</h4>", unsafe_allow_html=True)
     car_cols = ['date', 'cumulative']
     if 'cash_at_risk' in net_flows.columns: car_cols.append('cash_at_risk')
@@ -705,7 +716,6 @@ with tab2:
     if forecast_df is None or forecast_df.empty:
         st.info("Forecast unavailable. ARIMA may have failed or there's insufficient data.")
     else:
-        # Forecast with CI
         fig_fore = go.Figure()
         fig_fore.add_trace(go.Scatter(x=forecast_df['date'], y=forecast_df['upper_ci'], mode='lines', line=dict(width=0), showlegend=False))
         fig_fore.add_trace(go.Scatter(x=forecast_df['date'], y=forecast_df['lower_ci'], mode='lines', fill='tonexty', fillcolor='rgba(59,130,246,0.15)', name='95% CI', line=dict(width=0)))
@@ -713,7 +723,6 @@ with tab2:
         fig_fore = style_plotly_figure(fig_fore, title_text='Daily Net Flow Forecast', height=420)
         st.plotly_chart(fig_fore, use_container_width=True)
 
-        # cumulative forecast
         historical_data = net_flows[['date','cumulative']].rename(columns={'cumulative':'cumulative_forecast'})
         combined_df = pd.concat([historical_data, forecast_df[['date','cumulative_forecast']]]).reset_index(drop=True)
         fig_cum = go.Figure()
@@ -727,7 +736,6 @@ with tab2:
         fig_cum = style_plotly_figure(fig_cum, title_text='Combined Historical & Forecast Cumulative Balance', height=420)
         st.plotly_chart(fig_cum, use_container_width=True)
 
-        # Forecast table expander
         with st.expander("View Forecast Table", expanded=False):
             ft = forecast_df.copy()
             ft['date'] = ft['date'].dt.date
@@ -753,14 +761,28 @@ with tab3:
     c1, c2 = st.columns(2)
     with c1:
         if not inflow_by_currency.empty:
-            fig_in = px.pie(inflow_by_currency, values='sum', names='currency', title='Inflows by Currency (USD eq.)', hole=0.4)
+            fig_in = px.pie(
+                inflow_by_currency, 
+                values='sum', 
+                names='currency', 
+                title='Inflows by Currency (USD eq.)', 
+                hole=0.4,
+                color_discrete_sequence=['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444']
+            )
             fig_in = style_plotly_figure(fig_in, title_text=None, height=360)
             st.plotly_chart(fig_in, use_container_width=True)
         else:
             st.info("No inflow currency data.")
     with c2:
         if not outflow_by_currency.empty:
-            fig_out = px.pie(outflow_by_currency, values='sum', names='currency', title='Outflows by Currency (USD eq.)', hole=0.4)
+            fig_out = px.pie(
+                outflow_by_currency, 
+                values='sum', 
+                names='currency', 
+                title='Outflows by Currency (USD eq.)', 
+                hole=0.4,
+                color_discrete_sequence=['#ef4444', '#f59e0b', '#8b5cf6', '#3b82f6', '#10b981']
+            )
             fig_out = style_plotly_figure(fig_out, title_text=None, height=360)
             st.plotly_chart(fig_out, use_container_width=True)
         else:
@@ -771,13 +793,31 @@ with tab3:
     with colA:
         if not inflow_by_category.empty:
             inflow_cats = inflow_by_category.sort_values('sum', ascending=False).head(10)
-            fig3 = px.bar(inflow_cats, x='sum', y='category', orientation='h', title='Top Inflow Categories', labels={'sum':'Amount (USD)','category':'Category'}, color='sum', color_continuous_scale='Blues')
+            fig3 = px.bar(
+                inflow_cats, 
+                x='sum', 
+                y='category', 
+                orientation='h', 
+                title='Top Inflow Categories', 
+                labels={'sum':'Amount (USD)','category':'Category'}, 
+                color='sum', 
+                color_continuous_scale='Tealgrn'
+            )
             fig3 = style_plotly_figure(fig3, title_text=None, height=360)
             st.plotly_chart(fig3, use_container_width=True)
     with colB:
         if not outflow_by_category.empty:
             outflow_cats = outflow_by_category.sort_values('sum', ascending=False).head(10)
-            fig4 = px.bar(outflow_cats, x='sum', y='category', orientation='h', title='Top Outflow Categories', labels={'sum':'Amount (USD)','category':'Category'}, color='sum', color_continuous_scale='Reds')
+            fig4 = px.bar(
+                outflow_cats, 
+                x='sum', 
+                y='category', 
+                orientation='h', 
+                title='Top Outflow Categories', 
+                labels={'sum':'Amount (USD)','category':'Category'}, 
+                color='sum', 
+                color_continuous_scale='Reds'
+            )
             fig4 = style_plotly_figure(fig4, title_text=None, height=360)
             st.plotly_chart(fig4, use_container_width=True)
 
@@ -798,7 +838,6 @@ with tab4:
 
     dl1, dl2, dl3 = st.columns(3)
     with dl1:
-        # Download button uses custom CSS now
         st.download_button("Download Net Flows CSV", data=df_to_csv_bytes(net_flows), file_name="net_flows.csv", mime="text/csv")
     with dl2:
         if not forecast_df.empty:
@@ -815,7 +854,6 @@ with tab4:
     st.markdown("<h4 style='margin-top:12px'>Net Flows (full table)</h4>", unsafe_allow_html=True)
     st.dataframe(net_flows, use_container_width=True, height=360)
 
-    # Transaction details toggles
     if (not inflows.empty) or (not outflows.empty):
         colv1, colv2 = st.columns(2)
         with colv1:
